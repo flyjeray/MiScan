@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { API } from '../../api';
-import { MinterExplorerCoin } from '../../api/coins/models';
+import { MinterExplorerCoin } from '../../models/coins';
 
 export const HomeScreen = (): JSX.Element => {
   const [coins, setCoins] = useState<MinterExplorerCoin[]>([]);

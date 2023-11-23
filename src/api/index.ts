@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { CoinAPI } from './coins';
+import { AddressAPI } from './addresses';
 
 export type APIResponse<T> = {
-  data: {
-    data: T;
-  };
+  data: T;
 };
 
 export const Axios = axios.create({
@@ -13,4 +12,5 @@ export const Axios = axios.create({
 
 export const API = {
   coins: CoinAPI,
+  addresses: AddressAPI,
 };
