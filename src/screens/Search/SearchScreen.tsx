@@ -19,9 +19,7 @@ export const SearchScreen = (): JSX.Element => {
   };
 
   const getSavedAddresses = async () => {
-    const localSavedAddresses = await LocalStorage.get<string[]>(
-      'savedAddresses',
-    );
+    const localSavedAddresses = await LocalStorage.get('savedAddresses');
 
     if (localSavedAddresses && localSavedAddresses.length > 0) {
       setSaved(localSavedAddresses);

@@ -9,14 +9,16 @@ const storage = new Storage({
   defaultExpires: null,
 });
 
-export type STORAGE_KEY = 'savedAddresses';
+type STORAGE_MAP = {
+  savedAddresses: string[];
+};
 
 export const LocalStorage = {
-  get: <T>(key: STORAGE_KEY) =>
-    storage.load<T>({ key: `${APP_LOCAL_STORAGE_PREFIX}_${key}` }),
-  save: <T>(key: STORAGE_KEY, data: T) =>
+  get: <T extends keyof STORAGE_MAP>(key: T) =>
+    storage.load<STORAGE_MAP[T]>({ key: `${APP_LOCAL_STORAGE_PREFIX}_${key}` }),
+  save: <T extends keyof STORAGE_MAP>(key: T, data: STORAGE_MAP[T]) =>
     storage.save({
-      key,
+      key: `${APP_LOCAL_STORAGE_PREFIX}_${key}`,
       data,
     }),
 };
