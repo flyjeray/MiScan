@@ -6,7 +6,7 @@ const Tab = createBottomTabNavigator();
 
 export const NavigationRoot = (): JSX.Element => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
     </Tab.Navigator>

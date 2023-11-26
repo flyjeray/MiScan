@@ -5,7 +5,13 @@ import { API } from '../../api';
 import { MinterExplorerAddress } from '../../models/addresses';
 import { LocalStorage } from '../../utils/storage/storage';
 import { LocalStorageSavedAddress } from '../../utils/storage/models';
-import { Button, EditableTitle, PageContainer } from '../../components';
+import {
+  Button,
+  EditableTitle,
+  Input,
+  PageContainer,
+  ShortCoinInfo,
+} from '../../components';
 
 export const SearchScreen = (): JSX.Element => {
   const [query, setQuery] = useState('');
@@ -31,11 +37,23 @@ export const SearchScreen = (): JSX.Element => {
     }
   };
 
-  const getSavedAddresses = async () => {
-    const localSavedAddresses = await LocalStorage.get('savedAddresses');
+  const verifyAddresses = async (): Promise<LocalStorageSavedAddress[]> => {
+    const savedAddresses = (await LocalStorage.get('savedAddresses')) || [];
 
-    if (localSavedAddresses && localSavedAddresses.length > 0) {
-      setSaved(localSavedAddresses);
+    const filtered = savedAddresses.filter(address => {
+      return address.name && address.address;
+    });
+
+    await LocalStorage.save('savedAddresses', filtered);
+
+    return filtered;
+  };
+
+  const getSavedAddresses = async () => {
+    const addresses = await verifyAddresses();
+
+    if (addresses && addresses.length > 0) {
+      setSaved(addresses);
     }
   };
 
@@ -103,28 +121,31 @@ export const SearchScreen = (): JSX.Element => {
 
   return (
     <PageContainer>
-      <TextInput
+      <Input
         style={{ backgroundColor: 'white' }}
         value={query}
         onChangeText={setQuery}
+        placeholder="Search"
       />
       {fetched ? (
-        <View>
+        <>
           <Button.Component
             onPress={() => {
               setAddress(null);
               setQuery('');
               getSavedAddresses();
-            }}>
+            }}
+            alternative>
             <Button.InnerText>Go Back</Button.InnerText>
           </Button.Component>
           <EditableTitle
             maxAmountSymbols={30}
             editable={isAddressSaved(fetched.address)}
-            onChangeText={val => val && setName(val)}
+            onChangeText={val => setName(val)}
             onBlur={() => handleEditSaved(fetched.address, name)}
-            value={name}
+            value={name || fetched.address}
           />
+          {name && <Text selectable>{fetched.address}</Text>}
           {saved.find(svd => svd.address === fetched.address) ? (
             <Button.Component
               onPress={() => handleRemoveFromSaved(fetched.address)}>
@@ -135,12 +156,17 @@ export const SearchScreen = (): JSX.Element => {
               <Button.InnerText>Add to favorites</Button.InnerText>
             </Button.Component>
           )}
-          <Text>
-            {fetched.balances[0].coin.symbol} - {fetched.balances[0].amount}
-          </Text>
-        </View>
+          {fetched.balances
+            .sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount))
+            .map(balance => (
+              <ShortCoinInfo
+                name={balance.coin.symbol}
+                amount={balance.amount}
+              />
+            ))}
+        </>
       ) : (
-        <View>
+        <>
           {saved.map(svd => (
             <Button.Component
               key={`saved-${svd}`}
@@ -148,7 +174,7 @@ export const SearchScreen = (): JSX.Element => {
               <Button.InnerText>{svd.name}</Button.InnerText>
             </Button.Component>
           ))}
-        </View>
+        </>
       )}
     </PageContainer>
   );

@@ -6,6 +6,7 @@ import { useState } from 'react';
 const StyledInput = styled.TextInput`
   font-size: 18px;
   color: ${Colors.textColor};
+  padding: 0;
 `;
 
 type Props = TextInputProps & { maxAmountSymbols?: number };
