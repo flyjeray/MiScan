@@ -68,9 +68,7 @@ export const AddressInformation = ({
 
   return (
     <>
-      <Button.Component onPress={goBack} alternative>
-        <Button.InnerText>Go Back</Button.InnerText>
-      </Button.Component>
+      <Button onPress={goBack} alternative title="Go back" />
       <EditableTitle
         maxAmountSymbols={30}
         editable={isAddressSaved(address.address)}
@@ -80,14 +78,15 @@ export const AddressInformation = ({
       />
       {name && <Text selectable>{address.address}</Text>}
       {list.value.find(svd => svd.address === address.address) ? (
-        <Button.Component
-          onPress={() => handleRemoveFromSaved(address.address)}>
-          <Button.InnerText>Remove from favorites</Button.InnerText>
-        </Button.Component>
+        <Button
+          onPress={() => handleRemoveFromSaved(address.address)}
+          title="Remove from favorites"
+        />
       ) : (
-        <Button.Component onPress={() => handleAddToSaved(address.address)}>
-          <Button.InnerText>Add to favorites</Button.InnerText>
-        </Button.Component>
+        <Button
+          onPress={() => handleAddToSaved(address.address)}
+          title="Add to favorites"
+        />
       )}
       {address.balances
         .sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount))

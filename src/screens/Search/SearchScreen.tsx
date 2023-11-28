@@ -87,11 +87,11 @@ export const SearchScreen = (): JSX.Element => {
         />
       ) : (
         addressList.map(svd => (
-          <Button.Component
+          <Button
             key={`saved-${svd}`}
-            onPress={() => fetchSingleAddressData(svd.address)}>
-            <Button.InnerText>{svd.name}</Button.InnerText>
-          </Button.Component>
+            onPress={() => fetchSingleAddressData(svd.address)}
+            title={svd.name}
+          />
         ))
       )}
     </PageContainer>
