@@ -5,4 +5,6 @@ export const Colors = {
   textColor: `#040915`,
   textColorLight: `white`,
   coinInfoBackground: '#a5b9f0',
+  success: `#2fd046`,
+  fail: `#d32c2d`,
 };

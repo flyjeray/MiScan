@@ -1,9 +1,11 @@
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { Button, EditableTitle, ShortCoinInfo } from '../../../components';
 import { MinterExplorerAddress } from '../../../models/addresses';
 import { LocalStorage } from '../../../utils/storage/storage';
 import { LocalStorageSavedAddress } from '../../../utils/storage/models';
 import { PassedState } from '../../../models/global';
+import { useState } from 'react';
+import { AddressSection } from './Sections';
 
 type Props = {
   address: MinterExplorerAddress;
@@ -12,12 +14,17 @@ type Props = {
   goBack: () => void;
 };
 
+export type AddressSection = 'balances' | 'transactions';
+
 export const AddressInformation = ({
   address,
   name,
   list,
   goBack,
 }: Props): JSX.Element => {
+  const [displayedSection, setDisplayedSection] =
+    useState<AddressSection>('balances');
+
   const handleAddToSaved = (address: string) => {
     if (!list.value.find(svd => svd.address === address)) {
       const newSaved: LocalStorageSavedAddress[] = [
@@ -77,7 +84,7 @@ export const AddressInformation = ({
         value={name.value || address.address}
       />
       {name && <Text selectable>{address.address}</Text>}
-      {list.value.find(svd => svd.address === address.address) ? (
+      {isAddressSaved(address.address) ? (
         <Button
           onPress={() => handleRemoveFromSaved(address.address)}
           title="Remove from favorites"
@@ -88,15 +95,19 @@ export const AddressInformation = ({
           title="Add to favorites"
         />
       )}
-      {address.balances
-        .sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount))
-        .map(balance => (
-          <ShortCoinInfo
-            key={`${address.address}-${balance.coin.id}`}
-            name={balance.coin.symbol}
-            amount={balance.amount}
-          />
-        ))}
+      <View style={{ flexDirection: 'row', gap: 16 }}>
+        <Button
+          alternative={displayedSection === 'balances'}
+          onPress={() => setDisplayedSection('balances')}
+          title="Balances"
+        />
+        <Button
+          alternative={displayedSection === 'transactions'}
+          onPress={() => setDisplayedSection('transactions')}
+          title="Transactions"
+        />
+      </View>
+      {address && <AddressSection address={address} type={displayedSection} />}
     </>
   );
 };

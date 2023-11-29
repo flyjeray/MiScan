@@ -1,9 +1,20 @@
 import { Axios } from '..';
-import { MinterAPIGetAddressResponse } from './models';
+import {
+  MinterAPIGetAddressResponse,
+  MinterAPIGetTransactionsResponse,
+} from './models';
+
+const BASE = '/api/v2/addresses';
 
 const getAddress = (address: string) =>
-  Axios.get<MinterAPIGetAddressResponse>(`/api/v2/addresses/${address}`);
+  Axios.get<MinterAPIGetAddressResponse>(`${BASE}/${address}`);
+
+const getAddressTransactions = (address: string) =>
+  Axios.get<MinterAPIGetTransactionsResponse>(
+    `${BASE}/${address}/transactions`,
+  );
 
 export const AddressAPI = {
   getAddress,
+  getAddressTransactions,
 };

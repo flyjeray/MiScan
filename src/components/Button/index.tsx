@@ -15,7 +15,7 @@ const ButtonText = styled.Text<{ alternative?: boolean }>`
 `;
 
 const ButtonStyle = styled.TouchableOpacity<StyledButtonProps>`
-  width: 100%;
+  flex: 1;
   background-color: ${props =>
     props.alternative ? Colors.background : Colors.main};
   border-radius: 4px;
