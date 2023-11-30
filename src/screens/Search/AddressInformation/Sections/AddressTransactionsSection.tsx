@@ -9,10 +9,12 @@ type Props = {
   currentAddress: MinterExplorerAddress;
 };
 
+type TransactionType = 'send' | 'receive' | 'neutral';
+
 type TransactionDisplayData = {
   title: string;
   details: string;
-  receive: boolean;
+  type: TransactionType;
 };
 
 export const AddressTransactionsSection = ({
@@ -39,7 +41,7 @@ export const AddressTransactionsSection = ({
             details: `${parseFloat(myTransaction.value)} ${
               myTransaction.coin.symbol
             }`,
-            receive: true,
+            type: 'receive',
           };
         } else {
           return null;
@@ -65,7 +67,7 @@ export const AddressTransactionsSection = ({
         return {
           title: 'Multisend',
           details,
-          receive: false,
+          type: 'send',
         };
       }
     }
@@ -79,7 +81,7 @@ export const AddressTransactionsSection = ({
       return {
         title: 'Exchange',
         details: `${sellAmount} ${sellCoin} to ${buyAmount} ${buyCoin}`,
-        receive: true,
+        type: 'neutral',
       };
     }
     // Send
@@ -96,13 +98,13 @@ export const AddressTransactionsSection = ({
         return {
           title: `Receive`,
           details: `${amount} ${coin}`,
-          receive: true,
+          type: 'receive',
         };
       } else {
         return {
           title: `Send`,
           details: `${amount} ${coin}`,
-          receive: false,
+          type: 'send',
         };
       }
     }
@@ -114,12 +116,12 @@ export const AddressTransactionsSection = ({
         const data = convertTransactionToShortDescription(trx);
 
         return data ? (
-          <Block receive={data.receive}>
+          <Block type={data.type}>
             <Title>{data.title}</Title>
             <Details>{data.details}</Details>
           </Block>
         ) : (
-          <Block receive={false}>
+          <Block type="neutral">
             <Text>Could not read transaction</Text>
           </Block>
         );
@@ -140,10 +142,18 @@ const Details = styled.Text`
   font-weight: regular;
 `;
 
-const Block = styled.View<{ receive: boolean }>`
+const Block = styled.View<{ type: TransactionType }>`
   padding: 8px;
   border-radius: 4px;
-  background-color: ${({ receive }) =>
-    receive ? Colors.success : Colors.fail};
+  background-color: ${({ type }) => {
+    switch (type) {
+      case 'receive':
+        return Colors.success;
+      case 'send':
+        return Colors.fail;
+      case 'neutral':
+        return Colors.coinInfoBackground;
+    }
+  }};
   gap: 8px;
 `;
