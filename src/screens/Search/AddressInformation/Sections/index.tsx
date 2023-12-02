@@ -15,17 +15,33 @@ export const AddressSection = ({ address, type }: Props) => {
   const [transactions, setTransactions] = useState<MinterExplorerTransaction[]>(
     [],
   );
+  
+  const [page, setPage] = useState(1);
 
-  const fetchTransactions = async () => {
+  const fetchTransactions = async (page: number, newAddress: boolean) => {
     const response = await API.addresses.getAddressTransactions(
       address.address,
+      page
     );
-
-    setTransactions(response.data.data);
+    
+    if (response.status !== 200) {
+      setTransactions([]);
+      return;
+    }
+    
+    if (newAddress) {
+      setTransactions(response.data.data);
+      return;
+    }
+    
+    const copy = [...transactions];
+    const combined = copy.concat(response.data.data);
+    setTransactions(combined);
   };
 
   useEffect(() => {
-    fetchTransactions();
+    fetchTransactions(1, true);
+    setPage(1);
   }, [address.address]);
 
   switch (type) {
@@ -36,6 +52,10 @@ export const AddressSection = ({ address, type }: Props) => {
         <AddressTransactionsSection
           transactions={transactions}
           currentAddress={address}
+          loadNextPage={() => {
+            fetchTransactions(page + 1, false);
+            setPage(page + 1);
+          }}
         />
       );
   }

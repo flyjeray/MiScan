@@ -3,10 +3,12 @@ import { MinterExplorerTransaction } from '../../../../models/transactions';
 import { MinterExplorerAddress } from '../../../../models/addresses';
 import styled from 'styled-components/native';
 import { Colors } from '../../../../utils/theme/colors';
+import { Button } from '../../../../components';
 
 type Props = {
   transactions: MinterExplorerTransaction[];
   currentAddress: MinterExplorerAddress;
+  loadNextPage: () => void;
 };
 
 type TransactionType = 'send' | 'receive' | 'neutral';
@@ -14,12 +16,14 @@ type TransactionType = 'send' | 'receive' | 'neutral';
 type TransactionDisplayData = {
   title: string;
   details: string;
+  timestamp: Date;
   type: TransactionType;
 };
 
 export const AddressTransactionsSection = ({
   transactions,
   currentAddress,
+  loadNextPage
 }: Props): JSX.Element => {
   const convertTransactionToShortDescription = (
     trx: MinterExplorerTransaction,
@@ -42,6 +46,7 @@ export const AddressTransactionsSection = ({
               myTransaction.coin.symbol
             }`,
             type: 'receive',
+            timestamp: trx.timestamp
           };
         } else {
           return null;
@@ -67,6 +72,7 @@ export const AddressTransactionsSection = ({
         return {
           title: 'Multisend',
           details,
+          timestamp: trx.timestamp,
           type: 'send',
         };
       }
@@ -81,6 +87,7 @@ export const AddressTransactionsSection = ({
       return {
         title: 'Exchange',
         details: `${sellAmount} ${sellCoin} to ${buyAmount} ${buyCoin}`,
+        timestamp: trx.timestamp,
         type: 'neutral',
       };
     }
@@ -98,12 +105,14 @@ export const AddressTransactionsSection = ({
         return {
           title: `Receive`,
           details: `${amount} ${coin}`,
+          timestamp: trx.timestamp,
           type: 'receive',
         };
       } else {
         return {
           title: `Send`,
           details: `${amount} ${coin}`,
+          timestamp: trx.timestamp,
           type: 'send',
         };
       }
@@ -119,6 +128,7 @@ export const AddressTransactionsSection = ({
           <Block type={data.type}>
             <Title>{data.title}</Title>
             <Details>{data.details}</Details>
+            <Details>{new Date(data.timestamp).toLocaleString()}</Details>
           </Block>
         ) : (
           <Block type="neutral">
@@ -126,6 +136,7 @@ export const AddressTransactionsSection = ({
           </Block>
         );
       })}
+      <Button title="Load more" onPress={loadNextPage} />
     </>
   );
 };
