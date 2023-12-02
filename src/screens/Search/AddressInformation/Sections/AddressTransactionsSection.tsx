@@ -8,6 +8,7 @@ import { Button } from '../../../../components';
 type Props = {
   transactions: MinterExplorerTransaction[];
   currentAddress: MinterExplorerAddress;
+  isLoading: boolean;
   loadNextPage: () => void;
 };
 
@@ -23,7 +24,8 @@ type TransactionDisplayData = {
 export const AddressTransactionsSection = ({
   transactions,
   currentAddress,
-  loadNextPage
+  isLoading,
+  loadNextPage,
 }: Props): JSX.Element => {
   const convertTransactionToShortDescription = (
     trx: MinterExplorerTransaction,
@@ -46,7 +48,7 @@ export const AddressTransactionsSection = ({
               myTransaction.coin.symbol
             }`,
             type: 'receive',
-            timestamp: trx.timestamp
+            timestamp: trx.timestamp,
           };
         } else {
           return null;
@@ -136,7 +138,8 @@ export const AddressTransactionsSection = ({
           </Block>
         );
       })}
-      <Button title="Load more" onPress={loadNextPage} />
+      {isLoading && <Text>Loading..</Text>}
+      <Button disabled={isLoading} title="Load more" onPress={loadNextPage} />
     </>
   );
 };

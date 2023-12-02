@@ -12,6 +12,8 @@ export const SearchScreen = (): JSX.Element => {
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 500);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [currentAddress, setCurrentAddress] =
     useState<MinterExplorerAddress | null>(null);
   const [addressList, setAddressList] = useState<LocalStorageSavedAddress[]>(
@@ -20,19 +22,29 @@ export const SearchScreen = (): JSX.Element => {
   const [name, setName] = useState('');
 
   const fetchSingleAddressData = async (query: string) => {
-    const address = await API.addresses.getAddress(query);
+    setIsLoading(true);
 
-    setCurrentAddress(address.data.data);
+    API.addresses
+      .getAddress(query)
+      .then(res => {
+        setCurrentAddress(res.data.data);
 
-    const savedIndex = addressList.findIndex(
-      svd => svd.address === address.data.data.address,
-    );
+        const savedIndex = addressList.findIndex(
+          svd => svd.address === res.data.data.address,
+        );
 
-    if (savedIndex !== -1) {
-      setName(addressList[savedIndex].name);
-    } else {
-      setName(address.data.data.address);
-    }
+        if (savedIndex !== -1) {
+          setName(addressList[savedIndex].name);
+        } else {
+          setName(res.data.data.address);
+        }
+      })
+      .catch(() => {
+        setCurrentAddress(null);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const verifyAddressObjects = async (): Promise<
@@ -75,6 +87,7 @@ export const SearchScreen = (): JSX.Element => {
         onChangeText={setQuery}
         placeholder="Search"
       />
+      {isLoading && <Text>Loading..</Text>}
       {currentAddress ? (
         <AddressInformation
           address={currentAddress}
