@@ -4,6 +4,7 @@ import { MinterExplorerAddress } from '../../../../models/addresses';
 import styled from 'styled-components/native';
 import { Colors } from '../../../../utils/theme/colors';
 import { Button } from '../../../../components';
+import { translate } from '../../../../utils/translations/i18n';
 
 type Props = {
   transactions: MinterExplorerTransaction[];
@@ -43,7 +44,9 @@ export const AddressTransactionsSection = ({
 
         if (myTransaction) {
           return {
-            title: 'Receive from multisend',
+            title: translate(
+              'screens.address_information.transactions.receive_multisend',
+            ),
             details: `${parseFloat(myTransaction.value)} ${
               myTransaction.coin.symbol
             }`,
@@ -72,7 +75,9 @@ export const AddressTransactionsSection = ({
         });
 
         return {
-          title: 'Multisend',
+          title: translate(
+            'screens.address_information.transactions.multisend',
+          ),
           details,
           timestamp: trx.timestamp,
           type: 'send',
@@ -87,8 +92,10 @@ export const AddressTransactionsSection = ({
       const buyAmount = parseFloat(trx.data.value_to_buy);
 
       return {
-        title: 'Exchange',
-        details: `${sellAmount} ${sellCoin} to ${buyAmount} ${buyCoin}`,
+        title: translate('screens.address_information.transactions.exchange'),
+        details: `${sellAmount} ${sellCoin} ${translate(
+          'unions.exchange_to',
+        )} ${buyAmount} ${buyCoin}`,
         timestamp: trx.timestamp,
         type: 'neutral',
       };
@@ -99,20 +106,19 @@ export const AddressTransactionsSection = ({
       const coin = trx.data.coin.symbol;
 
       const receiver = trx.data.to;
-      const sender = trx.from;
 
       const isReceiving = currentAddress.address === receiver;
 
       if (isReceiving) {
         return {
-          title: `Receive`,
+          title: translate('screens.address_information.transactions.receive'),
           details: `${amount} ${coin}`,
           timestamp: trx.timestamp,
           type: 'receive',
         };
       } else {
         return {
-          title: `Send`,
+          title: translate('screens.address_information.transactions.send'),
           details: `${amount} ${coin}`,
           timestamp: trx.timestamp,
           type: 'send',
@@ -134,16 +140,20 @@ export const AddressTransactionsSection = ({
           </Block>
         ) : (
           <Block type="neutral">
-            <Text>Could not read transaction</Text>
+            <Text>
+              {translate(
+                'screens.address_information.transactions.cannot_read',
+              )}
+            </Text>
           </Block>
         );
       })}
       {isLoading ? (
-        <Text>Loading..</Text>
+        <Text>{translate('status.loading')}..</Text>
       ) : (
         <Button
           disabled={isLoading}
-          title="Load more"
+          title={translate('buttons.load_more')}
           onPress={loadNextPage}
           type="default"
         />

@@ -6,6 +6,7 @@ import { LocalStorageSavedAddress } from '../../../utils/storage/models';
 import { PassedState } from '../../../models/global';
 import { useState } from 'react';
 import { AddressSection } from './Sections';
+import { translate } from '../../../utils/translations/i18n';
 
 type Props = {
   address: MinterExplorerAddress;
@@ -72,7 +73,11 @@ export const AddressInformation = ({
 
   return (
     <>
-      <Button onPress={goBack} type="alternative" title="Go back" />
+      <Button
+        onPress={goBack}
+        type="alternative"
+        title={translate('navigation.back')}
+      />
       <EditableTitle
         maxAmountSymbols={30}
         editable={isAddressSaved(address.address)}
@@ -84,13 +89,13 @@ export const AddressInformation = ({
       {isAddressSaved(address.address) ? (
         <Button
           onPress={() => handleRemoveFromSaved(address.address)}
-          title="Remove from favorites"
+          title={translate('screens.address_information.remove_from_favorites')}
           type="error"
         />
       ) : (
         <Button
           onPress={() => handleAddToSaved(address.address)}
-          title="Add to favorites"
+          title={translate('screens.address_information.add_to_favorites')}
           type="default"
         />
       )}
@@ -98,12 +103,12 @@ export const AddressInformation = ({
         <Button
           type={displayedSection === 'balances' ? 'alternative' : 'default'}
           onPress={() => setDisplayedSection('balances')}
-          title="Balances"
+          title={translate('screens.address_information.balances')}
         />
         <Button
           type={displayedSection === 'transactions' ? 'alternative' : 'default'}
           onPress={() => setDisplayedSection('transactions')}
-          title="Transactions"
+          title={translate('screens.address_information.transactions.title')}
         />
       </View>
       {address && <AddressSection address={address} type={displayedSection} />}

@@ -8,11 +8,7 @@ export const HomeScreen = (): JSX.Element => {
   const [coins, setCoins] = useState<MinterExplorerCoin[]>([]);
 
   const fetchCoins = async () => {
-    console.log('Fetch coins start');
-
     const result = await API.coins.getAllCoins();
-
-    console.log('Fetch coins end:', result.data.data);
 
     if (result.data) {
       setCoins(result.data.data.slice(0, 5));

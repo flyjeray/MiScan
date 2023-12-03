@@ -7,6 +7,7 @@ import { LocalStorage } from '../../utils/storage/storage';
 import { LocalStorageSavedAddress } from '../../utils/storage/models';
 import { Button, Input, PageContainer } from '../../components';
 import { AddressInformation } from './AddressInformation';
+import { translate } from '../../utils/translations/i18n';
 
 export const SearchScreen = (): JSX.Element => {
   const [query, setQuery] = useState('');
@@ -85,9 +86,9 @@ export const SearchScreen = (): JSX.Element => {
         style={{ backgroundColor: 'white' }}
         value={query}
         onChangeText={setQuery}
-        placeholder="Search"
+        placeholder={translate('input.search')}
       />
-      {isLoading && <Text>Loading..</Text>}
+      {isLoading && <Text>{translate('buttons.load_more')}..</Text>}
       {currentAddress ? (
         <AddressInformation
           address={currentAddress}

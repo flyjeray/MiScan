@@ -1,0 +1,35 @@
+{
+  "status": {
+    "loading": "Loading"
+  },
+  "unions": {
+    "exchange_to": "to"
+  },
+  "input": {
+    "search": "Search"
+  },
+  "buttons": {
+    "load_more": "Load more"
+  },
+  "navigation": {
+    "back": "Go back"
+  },
+  "screens": {
+    "address_information": {
+      "add_to_favorites": "Add to favorites",
+      "remove_from_favorites": "Remove from favorites",
+
+      "balances": "Balances",
+      "transactions": {
+        "title": "Transactions",
+
+        "send": "Send",
+        "receive": "Receive",
+        "multisend": "Multisend",
+        "receive_multisend": "Receive from multisend",
+        "exchange": "Exchange",
+        "cannot_read": "Could not read transaction details"
+      }
+    }
+  }
+}

@@ -5,6 +5,8 @@ import { NavigationRoot } from './src/navigation/NavigationRoot';
 import { NavigationContainer } from '@react-navigation/native';
 import Toast, { ErrorToast, ToastConfig } from 'react-native-toast-message';
 
+import './src/utils/translations/i18n';
+
 const toastConfig: ToastConfig = {
   error: props => (
     <ErrorToast
