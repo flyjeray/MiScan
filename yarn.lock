@@ -6013,6 +6013,11 @@
     "opencollective" "^1.0.3"
     "opencollective-postinstall" "^2.0.2"
 
+"react-native-toast-message@^2.1.7":
+  "integrity" "sha512-5zX3T5buVpg4bn9KZYVZ2VUQiLQZ1FHSM2AFQHVpgeKMYb+Gq+jt7wjhfPqhuMkJElQr7XNrnRw/rBCdD+7Q9w=="
+  "resolved" "https://registry.npmjs.org/react-native-toast-message/-/react-native-toast-message-2.1.7.tgz"
+  "version" "2.1.7"
+
 "react-native@*", "react-native@^0.0.0-0 || >=0.60 <1.0", "react-native@>=0.57", "react-native@0.72.7":
   "integrity" "sha512-dqVFojOO9rOvyFbbM3/v9/GJR355OSuBhEY4NQlMIRc2w0Xch5MT/2uPoq3+OvJ+5h7a8LFAco3fucSffG0FbA=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.72.7.tgz"

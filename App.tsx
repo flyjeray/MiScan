@@ -3,13 +3,30 @@ import { View } from 'react-native';
 
 import { NavigationRoot } from './src/navigation/NavigationRoot';
 import { NavigationContainer } from '@react-navigation/native';
-import { Colors } from './src/utils/theme/colors';
+import Toast, { ErrorToast, ToastConfig } from 'react-native-toast-message';
+
+const toastConfig: ToastConfig = {
+  error: props => (
+    <ErrorToast
+      {...props}
+      text1Style={{
+        fontSize: 16,
+      }}
+      text2Style={{
+        fontSize: 14,
+      }}
+    />
+  ),
+};
 
 function App(): JSX.Element {
   return (
-    <NavigationContainer>
-      <NavigationRoot />
-    </NavigationContainer>
+    <>
+      <NavigationContainer>
+        <NavigationRoot />
+      </NavigationContainer>
+      <Toast config={toastConfig} />
+    </>
   );
 }
 

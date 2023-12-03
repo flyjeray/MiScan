@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native';
 import { useDebounce } from '../../utils/hooks/useDebounce';
 import { API } from '../../api';
 import { MinterExplorerAddress } from '../../models/addresses';
