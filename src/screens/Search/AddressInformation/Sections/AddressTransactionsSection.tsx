@@ -138,8 +138,16 @@ export const AddressTransactionsSection = ({
           </Block>
         );
       })}
-      {isLoading && <Text>Loading..</Text>}
-      <Button disabled={isLoading} title="Load more" onPress={loadNextPage} />
+      {isLoading ? (
+        <Text>Loading..</Text>
+      ) : (
+        <Button
+          disabled={isLoading}
+          title="Load more"
+          onPress={loadNextPage}
+          type="default"
+        />
+      )}
     </>
   );
 };

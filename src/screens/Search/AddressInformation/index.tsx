@@ -75,7 +75,7 @@ export const AddressInformation = ({
 
   return (
     <>
-      <Button onPress={goBack} alternative title="Go back" />
+      <Button onPress={goBack} type="alternative" title="Go back" />
       <EditableTitle
         maxAmountSymbols={30}
         editable={isAddressSaved(address.address)}
@@ -88,21 +88,23 @@ export const AddressInformation = ({
         <Button
           onPress={() => handleRemoveFromSaved(address.address)}
           title="Remove from favorites"
+          type="error"
         />
       ) : (
         <Button
           onPress={() => handleAddToSaved(address.address)}
           title="Add to favorites"
+          type="default"
         />
       )}
       <View style={{ flexDirection: 'row', gap: 16 }}>
         <Button
-          alternative={displayedSection === 'balances'}
+          type={displayedSection === 'balances' ? 'alternative' : 'default'}
           onPress={() => setDisplayedSection('balances')}
           title="Balances"
         />
         <Button
-          alternative={displayedSection === 'transactions'}
+          type={displayedSection === 'transactions' ? 'alternative' : 'default'}
           onPress={() => setDisplayedSection('transactions')}
           title="Transactions"
         />

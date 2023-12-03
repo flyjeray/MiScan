@@ -2,25 +2,55 @@ import { TouchableOpacityProps } from 'react-native';
 import styled from 'styled-components/native';
 import { Colors } from '../../utils/theme/colors';
 
+type ButtonType = 'default' | 'alternative' | 'error';
+
 type StyledButtonProps = {
-  alternative?: boolean;
   title?: string;
+  type: ButtonType;
 };
 
-const ButtonText = styled.Text<{ alternative?: boolean }>`
+const ButtonText = styled.Text<{ type: ButtonType }>`
   text-align: center;
 
-  color: ${props =>
-    props.alternative ? Colors.textColor : Colors.textColorLight};
+  color: ${props => {
+    switch (props.type) {
+      case 'alternative':
+        return Colors.textColor;
+      case 'error':
+        return Colors.textColorLight;
+      default:
+      case 'default':
+        return Colors.textColorLight;
+    }
+  }};
 `;
 
 const ButtonStyle = styled.TouchableOpacity<StyledButtonProps>`
   flex: 1;
-  background-color: ${props =>
-    props.alternative ? Colors.background : Colors.main};
+  background-color: ${props => {
+    switch (props.type) {
+      case 'alternative':
+        return Colors.background;
+      case 'error':
+        return Colors.fail;
+      default:
+      case 'default':
+        return Colors.main;
+    }
+  }};
   border-radius: 4px;
   border: 1px solid
-    ${props => (props.alternative ? Colors.main : Colors.mainLight)};
+    ${props => {
+      switch (props.type) {
+        case 'alternative':
+          return Colors.main;
+        case 'error':
+          return Colors.fail;
+        default:
+        case 'default':
+          return Colors.main;
+      }
+    }};
   padding: 8px;
 `;
 
@@ -28,7 +58,7 @@ type Props = TouchableOpacityProps & StyledButtonProps;
 
 const Button = (props: Props): JSX.Element => (
   <ButtonStyle {...props}>
-    <ButtonText alternative={props.alternative}>{props.title}</ButtonText>
+    <ButtonText type={props.type}>{props.title}</ButtonText>
   </ButtonStyle>
 );
 

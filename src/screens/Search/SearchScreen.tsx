@@ -102,7 +102,11 @@ export const SearchScreen = (): JSX.Element => {
         addressList.map(svd => (
           <Button
             key={`saved-${svd}`}
-            onPress={() => fetchSingleAddressData(svd.address)}
+            onPress={() => {
+              setQuery('');
+              fetchSingleAddressData(svd.address);
+            }}
+            type="default"
             title={svd.name}
           />
         ))

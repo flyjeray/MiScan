@@ -19,13 +19,13 @@ const Container = styled.View`
 const Title = styled.Text`
   font-size: 16px;
   font-weight: bold;
-  color: ${Colors.textColor};
+  color: ${Colors.textColorLight};
 `;
 
 const Details = styled.Text`
   font-size: 12px;
   font-weight: regular;
-  color: ${Colors.textColor};
+  color: ${Colors.textColorLight};
 `;
 
 const ShortCoinInfo = (props: Props): JSX.Element => {
