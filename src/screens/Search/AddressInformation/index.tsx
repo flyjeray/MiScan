@@ -50,12 +50,7 @@ export const AddressInformation = ({
 
   const handleEditSaved = (address: string, title: string) => {
     const index = list.value.findIndex(svd => svd.address === address);
-    let titleToSaveWith = title;
-
-    if (!titleToSaveWith) {
-      name.update(address);
-      titleToSaveWith = address;
-    }
+    let titleToSaveWith = title || 'Unnamed Address';
 
     if (index !== -1) {
       const copy = [...list.value];
@@ -66,7 +61,9 @@ export const AddressInformation = ({
 
       copy[index] = edited;
 
-      LocalStorage.save('savedAddresses', copy).then(() => name.update(title));
+      LocalStorage.save('savedAddresses', copy).then(() =>
+        name.update(titleToSaveWith),
+      );
     }
   };
 
@@ -81,7 +78,7 @@ export const AddressInformation = ({
         editable={isAddressSaved(address.address)}
         onChangeText={val => name.update(val)}
         onBlur={() => handleEditSaved(address.address, name.value)}
-        value={name.value || address.address}
+        value={name.value}
       />
       {name && <Text selectable>{address.address}</Text>}
       {isAddressSaved(address.address) ? (
