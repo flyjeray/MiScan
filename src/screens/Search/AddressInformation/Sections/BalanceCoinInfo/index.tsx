@@ -1,7 +1,5 @@
-import { Text } from 'react-native';
-
 import styled from 'styled-components/native';
-import { Colors } from '../../utils/theme/colors';
+import { Colors } from '../../../../../utils/theme/colors';
 
 type Props = {
   name: string;
@@ -28,7 +26,7 @@ const Details = styled.Text`
   color: ${Colors.textColorLight};
 `;
 
-const ShortCoinInfo = (props: Props): JSX.Element => {
+export const BalanceCoinInformation = (props: Props): JSX.Element => {
   return (
     <Container>
       <Title>{props.name}</Title>
@@ -36,5 +34,3 @@ const ShortCoinInfo = (props: Props): JSX.Element => {
     </Container>
   );
 };
-
-export default ShortCoinInfo;
