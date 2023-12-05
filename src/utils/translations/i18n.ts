@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import * as EnglishTranslations from './languages/en.json';
+import * as RussianTranslations from './languages/ru.json';
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'en',
@@ -10,10 +11,9 @@ i18n.use(initReactI18next).init({
   },
   resources: {
     en: { translation: EnglishTranslations },
+    ru: { translation: RussianTranslations },
   },
 });
-
-console.log(i18n.getDataByLanguage('en'));
 
 type FlattenKeys<T> = T extends object
   ? {

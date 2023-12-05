@@ -8,8 +8,11 @@ import { LocalStorageSavedAddress } from '../../utils/storage/models';
 import { Button, Input, PageContainer } from '../../components';
 import { AddressInformation } from './AddressInformation';
 import { translate } from '../../utils/translations/i18n';
+import { useTranslation } from 'react-i18next';
 
 export const SearchScreen = (): JSX.Element => {
+  const { i18n } = useTranslation();
+
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 500);
 
@@ -81,14 +84,14 @@ export const SearchScreen = (): JSX.Element => {
   }, []);
 
   return (
-    <PageContainer>
+    <PageContainer key={i18n.language}>
       <Input
         style={{ backgroundColor: 'white' }}
         value={query}
         onChangeText={setQuery}
         placeholder={translate('input.search')}
       />
-      {isLoading && <Text>{translate('buttons.load_more')}..</Text>}
+      {isLoading && <Text>{translate('status.loading')}..</Text>}
       {currentAddress ? (
         <AddressInformation
           address={currentAddress}

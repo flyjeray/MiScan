@@ -1,0 +1,35 @@
+{
+  "status": {
+    "loading": "Загрузка"
+  },
+  "unions": {
+    "exchange_to": "на"
+  },
+  "input": {
+    "search": "Поиск"
+  },
+  "buttons": {
+    "load_more": "Загрузить ещё"
+  },
+  "navigation": {
+    "back": "Вернуться назад"
+  },
+  "screens": {
+    "address_information": {
+      "add_to_favorites": "Добавить в избранное",
+      "remove_from_favorites": "Убрать из избранного",
+
+      "balances": "Балансы",
+      "transactions": {
+        "title": "Транзакции",
+
+        "send": "Отправка",
+        "receive": "Получение",
+        "multisend": "Мультисенд",
+        "receive_multisend": "Получение из мультисенда",
+        "exchange": "Обмен",
+        "cannot_read": "Ошибка при чтении деталей транзакции"
+      }
+    }
+  }
+}

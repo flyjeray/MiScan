@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import { Button, EditableTitle, ShortCoinInfo } from '../../../components';
+import { Button, EditableTitle } from '../../../components';
 import { MinterExplorerAddress } from '../../../models/addresses';
 import { LocalStorage } from '../../../utils/storage/storage';
 import { LocalStorageSavedAddress } from '../../../utils/storage/models';

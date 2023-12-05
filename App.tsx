@@ -1,5 +1,4 @@
 import React from 'react';
-import { View } from 'react-native';
 
 import { NavigationRoot } from './src/navigation/NavigationRoot';
 import { NavigationContainer } from '@react-navigation/native';
