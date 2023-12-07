@@ -23,7 +23,7 @@ export const AddressTransactionsSection = ({
   return (
     <>
       {transactions.map(trx => (
-        <TransactionInfo address={currentAddress} trx={trx} />
+        <TransactionInfo key={trx.hash} address={currentAddress} trx={trx} />
       ))}
       {isLoading ? (
         <Text>{translate('status.loading')}..</Text>

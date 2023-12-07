@@ -4,6 +4,7 @@ import { MinterExplorerTransaction } from '../../../../../../models/transactions
 import { translate } from '../../../../../../utils/translations/i18n';
 import { Colors } from '../../../../../../utils/theme/colors';
 import { Text } from 'react-native';
+import { useState } from 'react';
 
 type TransactionType = 'send' | 'receive' | 'neutral';
 
@@ -12,6 +13,7 @@ type TransactionDisplayData = {
   details: string;
   timestamp: Date;
   type: TransactionType;
+  secondEnd: string[];
 };
 
 type Props = {
@@ -20,6 +22,8 @@ type Props = {
 };
 
 export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
+  const [expanded, setExpanded] = useState(false);
+
   const convertTransactionToShortDescription = (
     trx: MinterExplorerTransaction,
   ): TransactionDisplayData | null => {
@@ -44,6 +48,7 @@ export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
             }`,
             type: 'receive',
             timestamp: trx.timestamp,
+            secondEnd: [sender],
           };
         } else {
           return null;
@@ -73,6 +78,7 @@ export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
           details,
           timestamp: trx.timestamp,
           type: 'send',
+          secondEnd: trx.data.list.map(entry => entry.to),
         };
       }
     }
@@ -90,6 +96,7 @@ export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
         )} ${buyAmount} ${buyCoin}`,
         timestamp: trx.timestamp,
         type: 'neutral',
+        secondEnd: [],
       };
     }
     // Send
@@ -97,9 +104,7 @@ export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
       const amount = parseFloat(trx.data.value);
       const coin = trx.data.coin.symbol;
 
-      const receiver = trx.data.to;
-
-      const isReceiving = address.address === receiver;
+      const isReceiving = address.address === trx.data.to;
 
       if (isReceiving) {
         return {
@@ -107,6 +112,7 @@ export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
           details: `${amount} ${coin}`,
           timestamp: trx.timestamp,
           type: 'receive',
+          secondEnd: [trx.from],
         };
       } else {
         return {
@@ -114,6 +120,7 @@ export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
           details: `${amount} ${coin}`,
           timestamp: trx.timestamp,
           type: 'send',
+          secondEnd: [trx.data.to],
         };
       }
     }
@@ -122,10 +129,16 @@ export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
   const data = convertTransactionToShortDescription(trx);
 
   return data ? (
-    <Block type={data.type}>
+    <Block type={data.type} onPress={() => setExpanded(!expanded)}>
       <Title>{data.title}</Title>
       <Details>{data.details}</Details>
       <Details>{new Date(data.timestamp).toLocaleString()}</Details>
+      {expanded &&
+        data.secondEnd.map((secondEndAddress, i) => (
+          <Details key={`${trx.hash}-secondend-${i}`}>
+            {secondEndAddress}
+          </Details>
+        ))}
     </Block>
   ) : (
     <Block type="neutral">
@@ -144,11 +157,11 @@ const Title = styled.Text`
 
 const Details = styled.Text`
   color: ${Colors.textColorLight};
-  font-size: 12px;
+  font-size: 14px;
   font-weight: regular;
 `;
 
-const Block = styled.View<{ type: TransactionType }>`
+const Block = styled.TouchableOpacity<{ type: TransactionType }>`
   padding: 8px;
   border-radius: 4px;
   background-color: ${({ type }) => {
