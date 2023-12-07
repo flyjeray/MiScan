@@ -1,4 +1,4 @@
-import { MinterExplorerAddress } from '../../../../models/addresses';
+import { MinterExplorerAddress } from '../../../../../models/addresses';
 import { BalanceCoinInformation } from './BalanceCoinInfo';
 
 type Props = {

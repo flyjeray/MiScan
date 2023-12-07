@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import * as _ from '..';
 import { MinterExplorerAddress } from '../../../../models/addresses';
-import { AddressBalanceSection } from './AddressBalancesSection';
+import { AddressBalanceSection } from './Balances';
 import { MinterExplorerTransaction } from '../../../../models/transactions';
 import { API } from '../../../../api';
-import { AddressTransactionsSection } from './AddressTransactionsSection';
+import { AddressTransactionsSection } from './Transactions';
 
 type Props = {
   address: MinterExplorerAddress;

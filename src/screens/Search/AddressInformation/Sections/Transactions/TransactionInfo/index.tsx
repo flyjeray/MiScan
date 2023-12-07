@@ -1,17 +1,9 @@
-import { Text } from 'react-native';
-import { MinterExplorerTransaction } from '../../../../models/transactions';
-import { MinterExplorerAddress } from '../../../../models/addresses';
 import styled from 'styled-components/native';
-import { Colors } from '../../../../utils/theme/colors';
-import { Button } from '../../../../components';
-import { translate } from '../../../../utils/translations/i18n';
-
-type Props = {
-  transactions: MinterExplorerTransaction[];
-  currentAddress: MinterExplorerAddress;
-  isLoading: boolean;
-  loadNextPage: () => void;
-};
+import { MinterExplorerAddress } from '../../../../../../models/addresses';
+import { MinterExplorerTransaction } from '../../../../../../models/transactions';
+import { translate } from '../../../../../../utils/translations/i18n';
+import { Colors } from '../../../../../../utils/theme/colors';
+import { Text } from 'react-native';
 
 type TransactionType = 'send' | 'receive' | 'neutral';
 
@@ -22,12 +14,12 @@ type TransactionDisplayData = {
   type: TransactionType;
 };
 
-export const AddressTransactionsSection = ({
-  transactions,
-  currentAddress,
-  isLoading,
-  loadNextPage,
-}: Props): JSX.Element => {
+type Props = {
+  address: MinterExplorerAddress;
+  trx: MinterExplorerTransaction;
+};
+
+export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
   const convertTransactionToShortDescription = (
     trx: MinterExplorerTransaction,
   ): TransactionDisplayData | null => {
@@ -35,11 +27,11 @@ export const AddressTransactionsSection = ({
     if ('list' in trx.data) {
       const sender = trx.from;
 
-      const isReceiving = currentAddress.address !== sender;
+      const isReceiving = address.address !== sender;
 
       if (isReceiving) {
         const myTransaction = trx.data.list.find(
-          trxEntry => trxEntry.to === currentAddress.address,
+          trxEntry => trxEntry.to === address.address,
         );
 
         if (myTransaction) {
@@ -107,7 +99,7 @@ export const AddressTransactionsSection = ({
 
       const receiver = trx.data.to;
 
-      const isReceiving = currentAddress.address === receiver;
+      const isReceiving = address.address === receiver;
 
       if (isReceiving) {
         return {
@@ -127,38 +119,20 @@ export const AddressTransactionsSection = ({
     }
   };
 
-  return (
-    <>
-      {transactions.map(trx => {
-        const data = convertTransactionToShortDescription(trx);
+  const data = convertTransactionToShortDescription(trx);
 
-        return data ? (
-          <Block type={data.type}>
-            <Title>{data.title}</Title>
-            <Details>{data.details}</Details>
-            <Details>{new Date(data.timestamp).toLocaleString()}</Details>
-          </Block>
-        ) : (
-          <Block type="neutral">
-            <Text>
-              {translate(
-                'screens.address_information.transactions.cannot_read',
-              )}
-            </Text>
-          </Block>
-        );
-      })}
-      {isLoading ? (
-        <Text>{translate('status.loading')}..</Text>
-      ) : (
-        <Button
-          disabled={isLoading}
-          title={translate('buttons.load_more')}
-          onPress={loadNextPage}
-          type="default"
-        />
-      )}
-    </>
+  return data ? (
+    <Block type={data.type}>
+      <Title>{data.title}</Title>
+      <Details>{data.details}</Details>
+      <Details>{new Date(data.timestamp).toLocaleString()}</Details>
+    </Block>
+  ) : (
+    <Block type="neutral">
+      <Text>
+        {translate('screens.address_information.transactions.cannot_read')}
+      </Text>
+    </Block>
   );
 };
 
