@@ -3,8 +3,10 @@ import React from 'react';
 import { NavigationRoot } from './src/navigation/NavigationRoot';
 import { NavigationContainer } from '@react-navigation/native';
 import Toast, { ErrorToast, ToastConfig } from 'react-native-toast-message';
+import { Provider } from 'react-redux';
 
 import './src/utils/translations/i18n';
+import { store } from './src/utils/redux/store';
 
 const toastConfig: ToastConfig = {
   error: props => (
@@ -23,9 +25,11 @@ const toastConfig: ToastConfig = {
 function App(): JSX.Element {
   return (
     <>
-      <NavigationContainer>
-        <NavigationRoot />
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <NavigationRoot />
+        </NavigationContainer>
+      </Provider>
       <Toast config={toastConfig} />
     </>
   );

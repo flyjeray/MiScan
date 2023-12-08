@@ -9,9 +9,17 @@ import { Button, Input, PageContainer } from '../../components';
 import { AddressInformation } from './AddressInformation';
 import { translate } from '../../utils/translations/i18n';
 import { useTranslation } from 'react-i18next';
+import { useAppDispatch, useAppSelector } from '../../utils/redux/hooks';
+import {
+  overrideChainLink,
+  popAddressChainLink,
+  selectChain,
+} from '../../utils/redux/slices/chainSlice';
 
 export const SearchScreen = (): JSX.Element => {
   const { i18n } = useTranslation();
+  const addressChain = useAppSelector(selectChain);
+  const dispatch = useAppDispatch();
 
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 500);
@@ -74,8 +82,16 @@ export const SearchScreen = (): JSX.Element => {
   };
 
   useEffect(() => {
+    if (addressChain.length > 0) {
+      fetchSingleAddressData(addressChain[addressChain.length - 1]);
+    } else {
+      setCurrentAddress(null);
+    }
+  }, [addressChain]);
+
+  useEffect(() => {
     if (debouncedQuery) {
-      fetchSingleAddressData(debouncedQuery);
+      dispatch(overrideChainLink([debouncedQuery]));
     }
   }, [debouncedQuery]);
 
@@ -98,17 +114,19 @@ export const SearchScreen = (): JSX.Element => {
           name={{ value: name, update: setName }}
           list={{ value: addressList, update: setAddressList }}
           goBack={() => {
-            setCurrentAddress(null);
-            getAddressesFromLocalStorage();
+            if (addressChain.length === 1) {
+              getAddressesFromLocalStorage();
+            }
+            dispatch(popAddressChainLink());
           }}
         />
       ) : (
         addressList.map(svd => (
           <Button
-            key={`saved-${svd}`}
+            key={`saved-${svd.address}`}
             onPress={() => {
               setQuery('');
-              fetchSingleAddressData(svd.address);
+              dispatch(overrideChainLink([svd.address]));
             }}
             type="default"
             title={svd.name}

@@ -7,6 +7,8 @@ import { PassedState } from '../../../models/global';
 import { useState } from 'react';
 import { AddressSection } from './Sections';
 import { translate } from '../../../utils/translations/i18n';
+import { useAppSelector } from '../../../utils/redux/hooks';
+import { selectChain } from '../../../utils/redux/slices/chainSlice';
 
 type Props = {
   address: MinterExplorerAddress;
@@ -25,6 +27,8 @@ export const AddressInformation = ({
 }: Props): JSX.Element => {
   const [displayedSection, setDisplayedSection] =
     useState<AddressSection>('balances');
+
+  const addressChain = useAppSelector(selectChain);
 
   const handleAddToSaved = (address: string) => {
     if (!list.value.find(svd => svd.address === address)) {
@@ -76,7 +80,16 @@ export const AddressInformation = ({
       <Button
         onPress={goBack}
         type="alternative"
-        title={translate('navigation.back')}
+        title={
+          translate('navigation.back') +
+          (addressChain.length > 1
+            ? ` - ${
+                list.value.find(
+                  svd => svd.address === addressChain[addressChain.length - 2],
+                )?.name || addressChain[addressChain.length - 2]
+              }`
+            : '')
+        }
       />
       <EditableTitle
         maxAmountSymbols={30}

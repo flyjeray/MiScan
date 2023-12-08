@@ -3,8 +3,10 @@ import { MinterExplorerAddress } from '../../../../../../models/addresses';
 import { MinterExplorerTransaction } from '../../../../../../models/transactions';
 import { translate } from '../../../../../../utils/translations/i18n';
 import { Colors } from '../../../../../../utils/theme/colors';
-import { Text } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
+import { useAppDispatch } from '../../../../../../utils/redux/hooks';
+import { addAddressChainLink } from '../../../../../../utils/redux/slices/chainSlice';
 
 type TransactionType = 'send' | 'receive' | 'neutral';
 
@@ -23,6 +25,8 @@ type Props = {
 
 export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
   const [expanded, setExpanded] = useState(false);
+
+  const dispatch = useAppDispatch();
 
   const convertTransactionToShortDescription = (
     trx: MinterExplorerTransaction,
@@ -135,9 +139,14 @@ export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
       <Details>{new Date(data.timestamp).toLocaleString()}</Details>
       {expanded &&
         data.secondEnd.map((secondEndAddress, i) => (
-          <Details key={`${trx.hash}-secondend-${i}`}>
-            {secondEndAddress}
-          </Details>
+          <TouchableOpacity
+            key={`${trx.hash}-secondend-${i}`}
+            onPress={() => {
+              dispatch(addAddressChainLink(secondEndAddress));
+              setExpanded(false);
+            }}>
+            <Details>{secondEndAddress}</Details>
+          </TouchableOpacity>
         ))}
     </Block>
   ) : (
