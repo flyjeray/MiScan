@@ -5,8 +5,12 @@ import { translate } from '../../../../../../utils/translations/i18n';
 import { Colors } from '../../../../../../utils/theme/colors';
 import { Text, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
-import { useAppDispatch } from '../../../../../../utils/redux/hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../utils/redux/hooks';
 import { addAddressChainLink } from '../../../../../../utils/redux/slices/chainSlice';
+import { selectSavedAddresses } from '../../../../../../utils/redux/slices/savedAddressesSlice';
 
 type TransactionType = 'send' | 'receive' | 'neutral';
 
@@ -27,6 +31,7 @@ export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
   const [expanded, setExpanded] = useState(false);
 
   const dispatch = useAppDispatch();
+  const savedAddresses = useAppSelector(selectSavedAddresses);
 
   const convertTransactionToShortDescription = (
     trx: MinterExplorerTransaction,
@@ -141,11 +146,15 @@ export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
         data.secondEnd.map((secondEndAddress, i) => (
           <TouchableOpacity
             key={`${trx.hash}-secondend-${i}`}
+            style={{ flexWrap: 'wrap' }}
             onPress={() => {
               dispatch(addAddressChainLink(secondEndAddress));
               setExpanded(false);
             }}>
-            <Details>{secondEndAddress}</Details>
+            <AddressLinkText>
+              {savedAddresses.find(svd => svd.address === secondEndAddress)
+                ?.name || secondEndAddress}
+            </AddressLinkText>
           </TouchableOpacity>
         ))}
     </Block>
@@ -164,10 +173,21 @@ const Title = styled.Text`
   font-weight: bold;
 `;
 
-const Details = styled.Text`
+const DetailsStyle = `
   color: ${Colors.textColorLight};
   font-size: 14px;
   font-weight: regular;
+`;
+
+const Details = styled.Text`
+  ${DetailsStyle}
+`;
+
+const AddressLinkText = styled.Text`
+  ${DetailsStyle}
+  border-color: ${Colors.textColorLight};
+  border-bottom-width: 1px;
+  padding-bottom: 2px;
 `;
 
 const Block = styled.TouchableOpacity<{ type: TransactionType }>`

@@ -3,8 +3,6 @@ import { Text } from 'react-native';
 import { useDebounce } from '../../utils/hooks/useDebounce';
 import { API } from '../../api';
 import { MinterExplorerAddress } from '../../models/addresses';
-import { LocalStorage } from '../../utils/storage/storage';
-import { LocalStorageSavedAddress } from '../../utils/storage/models';
 import { Button, Input, PageContainer } from '../../components';
 import { AddressInformation } from './AddressInformation';
 import { translate } from '../../utils/translations/i18n';
@@ -15,6 +13,10 @@ import {
   popAddressChainLink,
   selectChain,
 } from '../../utils/redux/slices/chainSlice';
+import {
+  getSavedAddresses,
+  selectSavedAddresses,
+} from '../../utils/redux/slices/savedAddressesSlice';
 
 export const SearchScreen = (): JSX.Element => {
   const { i18n } = useTranslation();
@@ -28,10 +30,9 @@ export const SearchScreen = (): JSX.Element => {
 
   const [currentAddress, setCurrentAddress] =
     useState<MinterExplorerAddress | null>(null);
-  const [addressList, setAddressList] = useState<LocalStorageSavedAddress[]>(
-    [],
-  );
-  const [name, setName] = useState('');
+  const [customAddressName, setCustomAddressName] = useState('');
+
+  const savedAddresses = useAppSelector(selectSavedAddresses);
 
   const fetchSingleAddressData = async (query: string) => {
     setIsLoading(true);
@@ -41,14 +42,14 @@ export const SearchScreen = (): JSX.Element => {
       .then(res => {
         setCurrentAddress(res.data.data);
 
-        const savedIndex = addressList.findIndex(
+        const savedIndex = savedAddresses.findIndex(
           svd => svd.address === res.data.data.address,
         );
 
         if (savedIndex !== -1) {
-          setName(addressList[savedIndex].name);
+          setCustomAddressName(savedAddresses[savedIndex].name);
         } else {
-          setName(res.data.data.address);
+          setCustomAddressName(res.data.data.address);
         }
       })
       .catch(() => {
@@ -57,28 +58,6 @@ export const SearchScreen = (): JSX.Element => {
       .finally(() => {
         setIsLoading(false);
       });
-  };
-
-  const verifyAddressObjects = async (): Promise<
-    LocalStorageSavedAddress[]
-  > => {
-    const savedAddresses = (await LocalStorage.get('savedAddresses')) || [];
-
-    const filtered = savedAddresses.filter(address => {
-      return address.name && address.address;
-    });
-
-    await LocalStorage.save('savedAddresses', filtered);
-
-    return filtered;
-  };
-
-  const getAddressesFromLocalStorage = async () => {
-    const addresses = await verifyAddressObjects();
-
-    if (addresses && addresses.length > 0) {
-      setAddressList(addresses);
-    }
   };
 
   useEffect(() => {
@@ -96,7 +75,7 @@ export const SearchScreen = (): JSX.Element => {
   }, [debouncedQuery]);
 
   useEffect(() => {
-    getAddressesFromLocalStorage();
+    dispatch(getSavedAddresses());
   }, []);
 
   return (
@@ -111,17 +90,17 @@ export const SearchScreen = (): JSX.Element => {
       {currentAddress ? (
         <AddressInformation
           address={currentAddress}
-          name={{ value: name, update: setName }}
-          list={{ value: addressList, update: setAddressList }}
+          name={{ value: customAddressName, update: setCustomAddressName }}
           goBack={() => {
             if (addressChain.length === 1) {
-              getAddressesFromLocalStorage();
+              dispatch(getSavedAddresses());
             }
             dispatch(popAddressChainLink());
           }}
         />
       ) : (
-        addressList.map(svd => (
+        !isLoading &&
+        savedAddresses.map(svd => (
           <Button
             key={`saved-${svd.address}`}
             onPress={() => {
