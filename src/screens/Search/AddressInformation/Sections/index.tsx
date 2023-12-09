@@ -23,6 +23,8 @@ export const AddressSection = ({ address, type }: Props) => {
   const fetchTransactions = async (page: number, newAddress: boolean) => {
     setIsLoading(true);
 
+    if (page === 1) setTransactions([]);
+
     API.addresses
       .getAddressTransactions(address.address, page)
       .then(res => {
