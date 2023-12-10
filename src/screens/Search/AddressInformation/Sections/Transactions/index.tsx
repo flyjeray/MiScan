@@ -1,15 +1,13 @@
 import { Text } from 'react-native';
 import { MinterExplorerTransaction } from '../../../../../models/transactions';
-import { MinterExplorerAddress } from '../../../../../models/addresses';
-import styled from 'styled-components/native';
-import { Colors } from '../../../../../utils/theme/colors';
+import { AddressDataWithLockedBalance } from '../../../../../models/addresses';
 import { Button } from '../../../../../components';
 import { translate } from '../../../../../utils/translations/i18n';
 import { TransactionInfo } from './TransactionInfo';
 
 type Props = {
   transactions: MinterExplorerTransaction[];
-  currentAddress: MinterExplorerAddress;
+  currentAddress: AddressDataWithLockedBalance;
   isLoading: boolean;
   loadNextPage: () => void;
 };

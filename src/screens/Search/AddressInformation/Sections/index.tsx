@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import * as _ from '..';
-import { MinterExplorerAddress } from '../../../../models/addresses';
+import { AddressDataWithLockedBalance } from '../../../../models/addresses';
 import { AddressBalanceSection } from './Balances';
 import { MinterExplorerTransaction } from '../../../../models/transactions';
 import { API } from '../../../../api';
 import { AddressTransactionsSection } from './Transactions';
 
 type Props = {
-  address: MinterExplorerAddress;
+  address: AddressDataWithLockedBalance;
   type: _.AddressSection;
 };
 

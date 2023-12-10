@@ -3,7 +3,9 @@
     "loading": "Загрузка"
   },
   "unions": {
-    "exchange_to": "на"
+    "exchange_to": "на",
+    "from": "От",
+    "until": "до"
   },
   "input": {
     "search": "Поиск"
@@ -20,6 +22,7 @@
       "remove_from_favorites": "Убрать из избранного",
 
       "balances": "Балансы",
+      "locked": "Заморожено",
       "transactions": {
         "title": "Транзакции",
 
@@ -28,7 +31,12 @@
         "multisend": "Мультисенд",
         "receive_multisend": "Получение из мультисенда",
         "exchange": "Обмен",
-        "cannot_read": "Ошибка при чтении деталей транзакции"
+        "cannot_read": "Ошибка при чтении деталей транзакции",
+        "multisig_edit": "Редактирование мульти-подписи",
+        "lock": "Заморозка",
+
+        "addresses_plural_lowercase": "адреса",
+        "until_block": "До блока"
       }
     }
   }

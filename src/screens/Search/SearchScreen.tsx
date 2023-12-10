@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Text } from 'react-native';
 import { useDebounce } from '../../utils/hooks/useDebounce';
 import { API } from '../../api';
-import { MinterExplorerAddress } from '../../models/addresses';
+import { AddressDataWithLockedBalance } from '../../models/addresses';
 import { Button, Input, PageContainer } from '../../components';
 import { AddressInformation } from './AddressInformation';
 import { translate } from '../../utils/translations/i18n';
@@ -29,7 +29,7 @@ export const SearchScreen = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [currentAddress, setCurrentAddress] =
-    useState<MinterExplorerAddress | null>(null);
+    useState<AddressDataWithLockedBalance | null>(null);
   const [customAddressName, setCustomAddressName] = useState('');
 
   const savedAddresses = useAppSelector(selectSavedAddresses);
@@ -37,27 +37,35 @@ export const SearchScreen = (): JSX.Element => {
   const fetchSingleAddressData = async (query: string) => {
     setIsLoading(true);
 
-    API.addresses
-      .getAddress(query)
-      .then(res => {
-        setCurrentAddress(res.data.data);
+    const addressResponse = await API.addresses.getAddress(query);
 
-        const savedIndex = savedAddresses.findIndex(
-          svd => svd.address === res.data.data.address,
-        );
+    if (addressResponse.status === 200) {
+      const lockedBalancesResponse = await API.addresses.getLockedBalances(
+        query,
+      );
 
-        if (savedIndex !== -1) {
-          setCustomAddressName(savedAddresses[savedIndex].name);
-        } else {
-          setCustomAddressName(res.data.data.address);
-        }
-      })
-      .catch(() => {
-        setCurrentAddress(null);
-      })
-      .finally(() => {
-        setIsLoading(false);
+      setCurrentAddress({
+        ...addressResponse.data.data,
+        locked:
+          lockedBalancesResponse.status === 200
+            ? lockedBalancesResponse.data
+            : [],
       });
+
+      const savedIndex = savedAddresses.findIndex(
+        svd => svd.address === addressResponse.data.data.address,
+      );
+
+      if (savedIndex !== -1) {
+        setCustomAddressName(savedAddresses[savedIndex].name);
+      } else {
+        setCustomAddressName(addressResponse.data.data.address);
+      }
+    } else {
+      setCurrentAddress(null);
+    }
+
+    setIsLoading(false);
   };
 
   useEffect(() => {

@@ -3,7 +3,9 @@
     "loading": "Loading"
   },
   "unions": {
-    "exchange_to": "to"
+    "exchange_to": "to",
+    "from": "From",
+    "until": "until"
   },
   "input": {
     "search": "Search"
@@ -20,6 +22,7 @@
       "remove_from_favorites": "Remove from favorites",
 
       "balances": "Balances",
+      "locked": "Locked",
       "transactions": {
         "title": "Transactions",
 
@@ -28,7 +31,12 @@
         "multisend": "Multisend",
         "receive_multisend": "Receive from multisend",
         "exchange": "Exchange",
-        "cannot_read": "Could not read transaction details"
+        "cannot_read": "Could not read transaction details",
+        "multisig_edit": "Multisig edit",
+        "lock": "Lock",
+
+        "addresses_plural_lowercase": "adresses",
+        "until_block": "Until block"
       }
     }
   }

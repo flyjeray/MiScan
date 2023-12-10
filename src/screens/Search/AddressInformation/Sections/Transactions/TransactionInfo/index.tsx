@@ -3,7 +3,7 @@ import { MinterExplorerAddress } from '../../../../../../models/addresses';
 import { MinterExplorerTransaction } from '../../../../../../models/transactions';
 import { translate } from '../../../../../../utils/translations/i18n';
 import { Colors } from '../../../../../../utils/theme/colors';
-import { Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { useState } from 'react';
 import {
   useAppDispatch,
@@ -19,7 +19,11 @@ type TransactionDisplayData = {
   details: string;
   timestamp: Date;
   type: TransactionType;
-  secondEnd: string[];
+  secondEnd?: string[];
+  multisigData?: { address: string; weight: number }[];
+  lockData?: {
+    block: number;
+  };
 };
 
 type Props = {
@@ -27,15 +31,67 @@ type Props = {
   trx: MinterExplorerTransaction;
 };
 
+type LinkButtonProps = TouchableOpacityProps & { address: string };
+
 export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
   const [expanded, setExpanded] = useState(false);
 
   const dispatch = useAppDispatch();
   const savedAddresses = useAppSelector(selectSavedAddresses);
 
+  const LinkButton = (props: LinkButtonProps): JSX.Element => {
+    return (
+      <TouchableOpacity
+        style={{ flexWrap: 'wrap', flexDirection: 'row' }}
+        onPress={() => {
+          dispatch(addAddressChainLink(props.address));
+          setExpanded(false);
+        }}
+        {...props}>
+        {props.children}
+      </TouchableOpacity>
+    );
+  };
+
   const convertTransactionToShortDescription = (
     trx: MinterExplorerTransaction,
   ): TransactionDisplayData | null => {
+    // Multisig edit
+    if ('weights' in trx.data) {
+      const editor = trx.from;
+      const data = trx.data;
+
+      const weights = data.addresses.map((address, i) => ({
+        address,
+        weight: data.weights[i],
+      }));
+
+      return {
+        title: translate(
+          'screens.address_information.transactions.multisig_edit',
+        ),
+        details: `${data.addresses.length} ${translate(
+          'screens.address_information.transactions.addresses_plural_lowercase',
+        )}`,
+        type: 'neutral',
+        timestamp: trx.timestamp,
+        multisigData: weights,
+      };
+    }
+
+    // Lock
+    if ('due_block' in trx.data) {
+      return {
+        title: translate('screens.address_information.transactions.lock'),
+        details: `${trx.data.coin.symbol} ${parseFloat(trx.data.value)}`,
+        type: 'neutral',
+        timestamp: trx.timestamp,
+        lockData: {
+          block: trx.data.due_block,
+        },
+      };
+    }
+
     // Multisend
     if ('list' in trx.data) {
       const sender = trx.from;
@@ -137,26 +193,41 @@ export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
 
   const data = convertTransactionToShortDescription(trx);
 
+  const findNameInSaved = (address: string): string =>
+    savedAddresses.find(svd => svd.address === address)?.name || address;
+
   return data ? (
     <Block type={data.type} onPress={() => setExpanded(!expanded)}>
       <Title>{data.title}</Title>
       <Details>{data.details}</Details>
       <Details>{new Date(data.timestamp).toLocaleString()}</Details>
       {expanded &&
-        data.secondEnd.map((secondEndAddress, i) => (
-          <TouchableOpacity
+        data.secondEnd?.map((secondEndAddress, i) => (
+          <LinkButton
             key={`${trx.hash}-secondend-${i}`}
-            style={{ flexWrap: 'wrap' }}
-            onPress={() => {
-              dispatch(addAddressChainLink(secondEndAddress));
-              setExpanded(false);
-            }}>
+            address={secondEndAddress}>
             <AddressLinkText>
-              {savedAddresses.find(svd => svd.address === secondEndAddress)
-                ?.name || secondEndAddress}
+              {findNameInSaved(secondEndAddress)}
             </AddressLinkText>
-          </TouchableOpacity>
+          </LinkButton>
         ))}
+      {expanded &&
+        data.multisigData?.map((address, i) => (
+          <LinkButton
+            address={address.address}
+            key={`${trx.hash}-multisig-${i}`}>
+            <Details>{address.weight} - </Details>
+            <AddressLinkText>
+              {findNameInSaved(address.address)}
+            </AddressLinkText>
+          </LinkButton>
+        ))}
+      {expanded && data.lockData && (
+        <Details key={`${trx.hash}-lock`}>
+          {translate('screens.address_information.transactions.until_block')}{' '}
+          {data.lockData.block}
+        </Details>
+      )}
     </Block>
   ) : (
     <Block type="neutral">

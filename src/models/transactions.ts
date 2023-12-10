@@ -11,7 +11,7 @@ export type MinterExplorerTransaction = {
   type: number;
   payload: string;
   from: string;
-  data: Data | { list: SendData[] };
+  data: Data | { list: SendData[] } | MultisigEditData | LockData;
   raw_tx: string;
   commission_in_base_coin: string;
   commission_in_gas_coin: string;
@@ -29,6 +29,18 @@ type CoinWithAmount = Coin & { amount: string };
 type SendData = {
   coin: Coin;
   to: string;
+  value: string;
+};
+
+type MultisigEditData = {
+  addresses: string[];
+  weights: number[];
+  threshold: number;
+};
+
+type LockData = {
+  coin: Coin;
+  due_block: number;
   value: string;
 };
 

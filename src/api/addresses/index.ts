@@ -1,4 +1,5 @@
 import { Axios } from '..';
+import { MinterExplorerLockedBalance } from '../../models/addresses';
 import {
   MinterAPIGetAddressResponse,
   MinterAPIGetTransactionsResponse,
@@ -11,10 +12,15 @@ const getAddress = (address: string) =>
 
 const getAddressTransactions = (address: string, page: number) =>
   Axios.get<MinterAPIGetTransactionsResponse>(
-    `${BASE}/${address}/transactions`, { params: { page }}
+    `${BASE}/${address}/transactions`,
+    { params: { page } },
   );
+
+const getLockedBalances = (address: string) =>
+  Axios.get<MinterExplorerLockedBalance[]>(`${BASE}/${address}/locks`);
 
 export const AddressAPI = {
   getAddress,
   getAddressTransactions,
+  getLockedBalances,
 };

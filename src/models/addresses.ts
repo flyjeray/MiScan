@@ -9,3 +9,14 @@ export type MinterExplorerAddress = {
     amount: string;
   }[];
 };
+
+export type MinterExplorerLockedBalance = {
+  coin: { id: number; symbol: string };
+  due_block: number;
+  start_block: number;
+  value: string;
+};
+
+export type AddressDataWithLockedBalance = MinterExplorerAddress & {
+  locked: MinterExplorerLockedBalance[];
+};

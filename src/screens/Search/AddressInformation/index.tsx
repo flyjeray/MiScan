@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 import { Button, EditableTitle } from '../../../components';
-import { MinterExplorerAddress } from '../../../models/addresses';
+import { AddressDataWithLockedBalance } from '../../../models/addresses';
 import { PassedState } from '../../../models/global';
 import { useState } from 'react';
 import { AddressSection } from './Sections';
@@ -15,7 +15,7 @@ import {
 } from '../../../utils/redux/slices/savedAddressesSlice';
 
 type Props = {
-  address: MinterExplorerAddress;
+  address: AddressDataWithLockedBalance;
   name: PassedState<string>;
   goBack: () => void;
 };
