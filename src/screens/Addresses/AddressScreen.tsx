@@ -18,7 +18,7 @@ import {
   selectSavedAddresses,
 } from '../../utils/redux/slices/savedAddressesSlice';
 
-export const SearchScreen = (): JSX.Element => {
+export const AddressScreen = (): JSX.Element => {
   const { i18n } = useTranslation();
   const addressChain = useAppSelector(selectChain);
   const dispatch = useAppDispatch();

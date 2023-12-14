@@ -4,7 +4,7 @@ import { API } from '../../api';
 import { MinterExplorerCoin } from '../../models/coins';
 import { PageContainer } from '../../components';
 
-export const HomeScreen = (): JSX.Element => {
+export const CoinsScreen = (): JSX.Element => {
   const [coins, setCoins] = useState<MinterExplorerCoin[]>([]);
 
   const fetchCoins = async () => {
