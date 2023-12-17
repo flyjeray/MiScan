@@ -10,4 +10,5 @@ export type MinterExplorerCoin = {
   burnable: boolean;
   mintable: boolean;
   type: string;
+  price_usd: string;
 };

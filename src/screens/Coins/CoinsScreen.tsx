@@ -1,32 +1,55 @@
-import { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Input, PageContainer } from '../../components';
+import { translate } from '../../utils/translations/i18n';
+import { useDebounce } from '../../utils/hooks/useDebounce';
 import { API } from '../../api';
 import { MinterExplorerCoin } from '../../models/coins';
-import { PageContainer } from '../../components';
+import { Text } from 'react-native';
 
 export const CoinsScreen = (): JSX.Element => {
-  const [coins, setCoins] = useState<MinterExplorerCoin[]>([]);
+  const [query, setQuery] = useState('');
+  const debouncedQuery = useDebounce(query, 500);
 
-  const fetchCoins = async () => {
-    const result = await API.coins.getAllCoins();
+  const [isLoading, setIsLoading] = useState(false);
+  const [coin, setCoin] = useState<MinterExplorerCoin | null>(null);
 
-    if (result.data) {
-      setCoins(result.data.data.slice(0, 5));
+  const fetchCoin = async (symbol: string) => {
+    if (!symbol) {
+      setCoin(null);
+      return;
+    }
+
+    setIsLoading(true);
+
+    const response = await API.coins.getCoinBySymbol(symbol.toUpperCase());
+
+    setIsLoading(false);
+
+    if (response.status === 200) {
+      setCoin(response.data.data);
+    } else {
+      setCoin(null);
     }
   };
 
   useEffect(() => {
-    fetchCoins();
-  }, []);
+    fetchCoin(debouncedQuery);
+  }, [debouncedQuery]);
 
   return (
     <PageContainer>
-      <Text style={{ fontSize: 24 }}>Home Screen</Text>
-      {coins.map(coin => (
-        <Text key={coin.id}>
-          {coin.name} ({coin.id}) - {parseInt(coin.volume)}
+      <Input
+        style={{ backgroundColor: 'white' }}
+        value={query}
+        onChangeText={setQuery}
+        placeholder={translate('input.search')}
+      />
+      {isLoading && <Text>Loading..</Text>}
+      {!isLoading && coin && (
+        <Text>
+          {coin.name} - {coin.price_usd}
         </Text>
-      ))}
+      )}
     </PageContainer>
   );
 };
