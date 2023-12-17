@@ -35,7 +35,7 @@ export const AddressInformation = ({
   const savedAddresses = useAppSelector(selectSavedAddresses);
 
   const findAddressInSaved = (address: string) =>
-    savedAddresses.find(svd => svd.address === address);
+    savedAddresses.find(svd => svd.value === address);
 
   return (
     <>
@@ -47,7 +47,7 @@ export const AddressInformation = ({
           (addressChain.length > 1
             ? ` - ${
                 findAddressInSaved(addressChain[addressChain.length - 2])
-                  ?.name || addressChain[addressChain.length - 2]
+                  ?.label || addressChain[addressChain.length - 2]
               }`
             : '')
         }
@@ -58,7 +58,7 @@ export const AddressInformation = ({
         onChangeText={val => name.update(val)}
         onBlur={() =>
           dispatch(
-            editSavedAddress({ address: address.address, name: name.value }),
+            editSavedAddress({ value: address.address, label: name.value }),
           )
         }
         value={name.value}
@@ -67,13 +67,13 @@ export const AddressInformation = ({
       {!!findAddressInSaved(address.address) ? (
         <Button
           onPress={() => dispatch(removeAddressFromSaved(address.address))}
-          title={translate('screens.address_information.remove_from_favorites')}
+          title={translate('buttons.remove_from_favorites')}
           type="error"
         />
       ) : (
         <Button
           onPress={() => dispatch(saveAddress(address.address))}
-          title={translate('screens.address_information.add_to_favorites')}
+          title={translate('buttons.add_to_favorites')}
           type="default"
         />
       )}

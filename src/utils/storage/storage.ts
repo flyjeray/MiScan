@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Storage from 'react-native-storage';
-import { LocalStorageSavedAddress } from './models';
+import { LocalStorageStoredEntry } from './models';
 
 const APP_LOCAL_STORAGE_PREFIX = 'MISCANLOCALDATA';
 
@@ -11,7 +11,8 @@ const storage = new Storage({
 });
 
 type STORAGE_MAP = {
-  savedAddresses: LocalStorageSavedAddress[];
+  savedAddresses: LocalStorageStoredEntry[];
+  savedCoins: LocalStorageStoredEntry[];
 };
 
 export const LocalStorage = {

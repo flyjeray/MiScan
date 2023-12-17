@@ -1,4 +1,4 @@
-export type LocalStorageSavedAddress = {
-  name: string;
-  address: string;
+export type LocalStorageStoredEntry = {
+  label: string;
+  value: string;
 };

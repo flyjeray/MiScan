@@ -1,12 +1,20 @@
 import { useEffect, useState } from 'react';
-import { Input, PageContainer } from '../../components';
+import { Button, Input, PageContainer } from '../../components';
 import { translate } from '../../utils/translations/i18n';
 import { useDebounce } from '../../utils/hooks/useDebounce';
 import { API } from '../../api';
 import { MinterExplorerCoin } from '../../models/coins';
 import { Text } from 'react-native';
+import { CoinInformation } from './CoinInformation';
+import { useAppDispatch, useAppSelector } from '../../utils/redux/hooks';
+import {
+  getSavedCoins,
+  selectSavedCoins,
+} from '../../utils/redux/slices/savedCoinsSlice';
 
 export const CoinsScreen = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const savedCoins = useAppSelector(selectSavedCoins);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 500);
 
@@ -46,10 +54,26 @@ export const CoinsScreen = (): JSX.Element => {
       />
       {isLoading && <Text>Loading..</Text>}
       {!isLoading && coin && (
-        <Text>
-          {coin.name} - {coin.price_usd}
-        </Text>
+        <CoinInformation
+          coin={coin}
+          goBack={() => {
+            dispatch(getSavedCoins());
+            setCoin(null);
+          }}
+        />
       )}
+      {!isLoading &&
+        !coin &&
+        savedCoins.map(coin => (
+          <Button
+            type="default"
+            onPress={() => {
+              setQuery('');
+              fetchCoin(coin.value);
+            }}
+            title={`${coin.label} (${coin.value})`}
+          />
+        ))}
     </PageContainer>
   );
 };

@@ -53,11 +53,11 @@ export const AddressScreen = (): JSX.Element => {
       });
 
       const savedIndex = savedAddresses.findIndex(
-        svd => svd.address === addressResponse.data.data.address,
+        svd => svd.value === addressResponse.data.data.address,
       );
 
       if (savedIndex !== -1) {
-        setCustomAddressName(savedAddresses[savedIndex].name);
+        setCustomAddressName(savedAddresses[savedIndex].label);
       } else {
         setCustomAddressName(addressResponse.data.data.address);
       }
@@ -110,13 +110,13 @@ export const AddressScreen = (): JSX.Element => {
         !isLoading &&
         savedAddresses.map(svd => (
           <Button
-            key={`saved-${svd.address}`}
+            key={`saved-${svd.value}`}
             onPress={() => {
               setQuery('');
-              dispatch(overrideChainLink([svd.address]));
+              dispatch(overrideChainLink([svd.value]));
             }}
             type="default"
-            title={svd.name}
+            title={svd.label}
           />
         ))
       )}

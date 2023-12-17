@@ -194,7 +194,7 @@ export const TransactionInfo = ({ address, trx }: Props): JSX.Element => {
   const data = convertTransactionToShortDescription(trx);
 
   const findNameInSaved = (address: string): string =>
-    savedAddresses.find(svd => svd.address === address)?.name || address;
+    savedAddresses.find(svd => svd.value === address)?.label || address;
 
   return data ? (
     <Block type={data.type} onPress={() => setExpanded(!expanded)}>

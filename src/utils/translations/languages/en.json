@@ -11,16 +11,16 @@
     "search": "Search"
   },
   "buttons": {
-    "load_more": "Load more"
+    "load_more": "Load more",
+
+    "add_to_favorites": "Add to favorites",
+    "remove_from_favorites": "Remove from favorites"
   },
   "navigation": {
     "back": "Go back"
   },
   "screens": {
     "address_information": {
-      "add_to_favorites": "Add to favorites",
-      "remove_from_favorites": "Remove from favorites",
-
       "balances": "Balances",
       "locked": "Locked",
       "transactions": {
@@ -38,6 +38,9 @@
         "addresses_plural_lowercase": "adresses",
         "until_block": "Until block"
       }
+    },
+    "coin_information": {
+      "search": "Search by symbol (for example - BTC)"
     }
   }
 }

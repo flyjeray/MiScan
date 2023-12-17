@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../store';
-import { LocalStorageSavedAddress } from '../../storage/models';
+import { LocalStorageStoredEntry } from '../../storage/models';
 import { LocalStorage } from '../../storage/storage';
 
 interface SavedAddressesSlice {
-  addresses: LocalStorageSavedAddress[];
+  addresses: LocalStorageStoredEntry[];
 }
 
 const initialState: SavedAddressesSlice = {
@@ -18,7 +18,7 @@ export const getSavedAddresses = createAsyncThunk(
     const savedAddresses = (await LocalStorage.get('savedAddresses')) || [];
 
     const verified = savedAddresses.filter(address => {
-      return address.name && address.address;
+      return address.label && address.value;
     });
 
     await LocalStorage.save('savedAddresses', verified);
@@ -32,10 +32,10 @@ export const savedAddressesSlice = createSlice({
   initialState,
   reducers: {
     saveAddress: (state, action: PayloadAction<string>) => {
-      if (!state.addresses.find(svd => svd.address === action.payload)) {
-        const newSaved: LocalStorageSavedAddress[] = [
+      if (!state.addresses.find(svd => svd.value === action.payload)) {
+        const newSaved: LocalStorageStoredEntry[] = [
           ...state.addresses,
-          { name: action.payload, address: action.payload },
+          { label: action.payload, value: action.payload },
         ];
 
         LocalStorage.save('savedAddresses', newSaved);
@@ -44,7 +44,7 @@ export const savedAddressesSlice = createSlice({
     },
     removeAddressFromSaved: (state, action: PayloadAction<string>) => {
       const index = state.addresses.findIndex(
-        svd => svd.address === action.payload,
+        svd => svd.value === action.payload,
       );
       if (index !== -1) {
         const newSaved = [...state.addresses];
@@ -56,18 +56,18 @@ export const savedAddressesSlice = createSlice({
     },
     editSavedAddress: (
       state,
-      action: PayloadAction<LocalStorageSavedAddress>,
+      action: PayloadAction<LocalStorageStoredEntry>,
     ) => {
       const index = state.addresses.findIndex(
-        svd => svd.address === action.payload.address,
+        svd => svd.value === action.payload.value,
       );
-      let titleToSaveWith = action.payload.name || 'Unnamed Address';
+      let titleToSaveWith = action.payload.label || 'Unnamed Address';
 
       if (index !== -1) {
         const copy = [...state.addresses];
-        const edited = {
-          name: titleToSaveWith,
-          address: action.payload.address,
+        const edited: LocalStorageStoredEntry = {
+          label: titleToSaveWith,
+          value: action.payload.value,
         };
 
         copy[index] = edited;
